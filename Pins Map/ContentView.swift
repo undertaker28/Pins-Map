@@ -6,24 +6,23 @@
 //
 
 import SwiftUI
-import UIKit
 import CoreLocation
 import MapKit
 
 struct ContentView: View {
-    @State private var showingAlert = false
-    @State private var address: String = ""
+    @State private var annotationsArray = [MKPointAnnotation]()
+    @State private var isLocked = false
     
     var body: some View {
         ZStack {
-            MapView()
+            MapView(annotations: annotationsArray)
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 HStack {
                     Spacer()
                     Button("Add address") {
-                        alertAddAddress(title: "Add address", placeholder: "Add address") { (text) in
-                            print(text)
+                        alertAddAddress(title: "Add address", placeholder: "Add address") { [self] (text) in
+                            setupPlacemark(addressPlace: text)
                         }
                     }
                     .font(.headline)
@@ -35,48 +34,69 @@ struct ContentView: View {
                 .padding()
                 Spacer()
                 HStack {
-                    Button("Route", action: route)
+                    Button("Route") {}
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .hidden()
+                        .opacity(isLocked ? 1.0 : 0.0)
                     Spacer()
-                    Button("Reset", action: reset)
+                    Button("Reset") {}
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .hidden()
+                        .opacity(isLocked ? 1.0 : 0.0)
                 }
                 .padding()
             }
         }
     }
-}
-
-func addAddress() {
-    print("Add address")
-}
-
-func route() {
-    print("Route")
-}
-
-func reset() {
-    print("Reset")
+    
+    private func setupPlacemark(addressPlace: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(addressPlace) { [self] (placemarks, error) in
+            if let error = error {
+                print(error)
+                alertError(title: "Error", message: "Try again!")
+                return
+            }
+            
+            guard let placemarks = placemarks else {
+                return
+            }
+            let placemark = placemarks.first
+            
+            let annotation = MKPointAnnotation()
+            annotation.title = addressPlace
+            
+            guard let placemarkLocation = placemark?.location else {
+                return
+            }
+            annotation.coordinate = placemarkLocation.coordinate
+            annotationsArray.append(annotation)
+            
+            if annotationsArray.count > 2 {
+                isLocked = true
+            }
+            
+        }
+    }
 }
 
 struct MapView: UIViewRepresentable {
+    var annotations = [MKPointAnnotation]()
+    
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        
+        uiView.addAnnotations(annotations)
+        uiView.showAnnotations(annotations, animated: true)
     }
 }
 
