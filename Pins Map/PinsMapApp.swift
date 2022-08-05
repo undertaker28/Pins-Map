@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Pins_MapApp: App {
+struct PinsMapApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

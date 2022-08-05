@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import UIKit
 import CoreLocation
 import MapKit
 
 struct ContentView: View {
+    @State private var showingAlert = false
+    @State private var address: String = ""
+    
     var body: some View {
         ZStack {
             MapView()
@@ -17,12 +21,16 @@ struct ContentView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button("Add address", action: addAddress)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    Button("Add address") {
+                        alertAddAddress(title: "Add address", placeholder: "Add address") { (text) in
+                            print(text)
+                        }
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
                 .padding()
                 Spacer()
@@ -33,6 +41,7 @@ struct ContentView: View {
                         .padding()
                         .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .hidden()
                     Spacer()
                     Button("Reset", action: reset)
                         .font(.headline)
@@ -40,6 +49,7 @@ struct ContentView: View {
                         .padding()
                         .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .hidden()
                 }
                 .padding()
             }

@@ -7,18 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E997FA23289C4FFB007D1730 /* Pins_MapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E997FA22289C4FFB007D1730 /* Pins_MapApp.swift */; };
+		E997FA23289C4FFB007D1730 /* PinsMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E997FA22289C4FFB007D1730 /* PinsMapApp.swift */; };
 		E997FA25289C4FFB007D1730 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E997FA24289C4FFB007D1730 /* ContentView.swift */; };
 		E997FA27289C4FFE007D1730 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E997FA26289C4FFE007D1730 /* Assets.xcassets */; };
 		E997FA2A289C4FFE007D1730 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E997FA29289C4FFE007D1730 /* Preview Assets.xcassets */; };
+		E9F3A35E289D356B00DE4A18 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F3A35D289D356B00DE4A18 /* Alert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E997FA1F289C4FFB007D1730 /* Pins Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pins Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E997FA22289C4FFB007D1730 /* Pins_MapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pins_MapApp.swift; sourceTree = "<group>"; };
+		E997FA22289C4FFB007D1730 /* PinsMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsMapApp.swift; sourceTree = "<group>"; };
 		E997FA24289C4FFB007D1730 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E997FA26289C4FFE007D1730 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E997FA29289C4FFE007D1730 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E9F3A35D289D356B00DE4A18 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +53,9 @@
 		E997FA21289C4FFB007D1730 /* Pins Map */ = {
 			isa = PBXGroup;
 			children = (
-				E997FA22289C4FFB007D1730 /* Pins_MapApp.swift */,
+				E997FA22289C4FFB007D1730 /* PinsMapApp.swift */,
 				E997FA24289C4FFB007D1730 /* ContentView.swift */,
+				E9F3A35D289D356B00DE4A18 /* Alert.swift */,
 				E997FA26289C4FFE007D1730 /* Assets.xcassets */,
 				E997FA28289C4FFE007D1730 /* Preview Content */,
 			);
@@ -137,8 +140,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9F3A35E289D356B00DE4A18 /* Alert.swift in Sources */,
 				E997FA25289C4FFB007D1730 /* ContentView.swift in Sources */,
-				E997FA23289C4FFB007D1730 /* Pins_MapApp.swift in Sources */,
+				E997FA23289C4FFB007D1730 /* PinsMapApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
