@@ -16,7 +16,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            MapView(annotations: annotationsArray, isRoute: isRoute)
+            MapView(annotations: annotationsArray, isRoute: isRoute, isReset: !isLocked)
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 HStack {
@@ -38,9 +38,6 @@ struct ContentView: View {
                 HStack {
                     Button("Route") {
                         isRoute = true
-                        for index in 0..<annotationsArray.count - 1 {
-                            createDirectionRequest(startCoordinate: annotationsArray[index].coordinate, destinationCoordinate: annotationsArray[index + 1].coordinate)
-                        }
                     }
                     .font(.headline)
                     .foregroundColor(.white)
@@ -49,7 +46,11 @@ struct ContentView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .opacity(isLocked ? 1.0 : 0.0)
                     Spacer()
-                    Button("Reset") {}
+                    Button("Reset") {
+                        annotationsArray = [MKPointAnnotation]()
+                        isRoute = false
+                        isLocked = false
+                    }
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
@@ -90,41 +91,12 @@ struct ContentView: View {
             }
         }
     }
-    
-    private func createDirectionRequest(startCoordinate: CLLocationCoordinate2D, destinationCoordinate: CLLocationCoordinate2D) {
-        let startLocation = MKPlacemark(coordinate: startCoordinate)
-        let destinationLocation = MKPlacemark(coordinate: destinationCoordinate)
-        
-        let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: startLocation)
-        request.destination = MKMapItem(placemark: destinationLocation)
-        request.transportType = .walking
-        request.requestsAlternateRoutes = true
-        
-        let direction = MKDirections(request: request)
-        direction.calculate { (response, error) in
-            if let error = error {
-                print(error)
-                return
-            }
-            
-            guard let response = response else {
-                self.alertError(title: "Error", message: "Try again!")
-                return
-            }
-            
-            var minRoute = response.routes[0]
-            print(minRoute)
-            for route in response.routes {
-                minRoute = (route.distance < minRoute.distance) ? route : minRoute
-            }
-        }
-    }
 }
 
 struct MapView: UIViewRepresentable {
     var annotations = [MKPointAnnotation]()
     let isRoute: Bool
+    let isReset: Bool
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
@@ -134,27 +106,40 @@ struct MapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         if isRoute {
-            for index in 0..<annotations.count - 1 {
-                
+            for index in 0...annotations.count - 2 {
                 let startLocation = MKPlacemark(coordinate: annotations[index].coordinate)
                 let destinationLocation = MKPlacemark(coordinate: annotations[index + 1].coordinate)
                 
                 let request = MKDirections.Request()
                 request.source = MKMapItem(placemark: startLocation)
                 request.destination = MKMapItem(placemark: destinationLocation)
-                request.transportType = .automobile
+                request.transportType = .walking
+                request.requestsAlternateRoutes = true
                 
-                let directions = MKDirections(request: request)
-                directions.calculate { response, error in
-                    guard let route = response?.routes.first else { return }
-                    uiView.addAnnotations(annotations)
-                    uiView.addOverlay(route.polyline)
-                    uiView.setVisibleMapRect(
-                        route.polyline.boundingMapRect,
-                        edgePadding: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
-                        animated: true)
+                let direction = MKDirections(request: request)
+                direction.calculate { (response, error) in
+                    if let error = error {
+                        print(error)
+                        return
+                    }
+                    
+                    guard let response = response else {
+                        self.alertError(title: "Error", message: "Try again!")
+                        return
+                    }
+                    
+                    var minRoute = response.routes[0]
+                    for route in response.routes {
+                        minRoute = (route.distance < minRoute.distance) ? route : minRoute
+                    }
+                    
+                    uiView.addOverlay(minRoute.polyline)
                 }
             }
+        }
+        if isReset {
+            uiView.removeOverlays(uiView.overlays)
+            uiView.removeAnnotations(uiView.annotations)
         }
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(annotations, animated: true)
