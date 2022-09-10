@@ -1,5 +1,5 @@
 # Pins Map
-SImple application that shows the shortest distance between points.
+Simple application that shows the shortest distance between points.
 ## Features:
 - Shortest distance between points
 - SwiftUI
